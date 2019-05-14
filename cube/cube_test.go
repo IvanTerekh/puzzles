@@ -1,6 +1,7 @@
 package cube
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -11,6 +12,8 @@ func TestNewCube(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
+
+	fmt.Println(cube)
 
 	l := len(cube.Sides[F])
 	if l != n {
@@ -23,17 +26,17 @@ func TestNewCube(t *testing.T) {
 		}
 	}
 
-	frontSide := Side([][]Face{{F, F, F}, {F, F, F}, {F, F, F}})
+	frontSide := side([][]face{{F, F, F}, {F, F, F}, {F, F, F}})
 	if !reflect.DeepEqual(cube.Sides[F], frontSide) {
 		t.Fatalf("Front side is not properly assigned, expected: %v, got: %v", frontSide, cube.Sides[F])
 	}
 
-	downSide := Side([][]Face{{D, D, D}, {D, D, D}, {D, D, D}})
+	downSide := side([][]face{{D, D, D}, {D, D, D}, {D, D, D}})
 	if !reflect.DeepEqual(cube.Sides[D], downSide) {
 		t.Fatalf("Down side is not properly assigned, expected: %v, got: %v", downSide, cube.Sides[D])
 	}
 
-	leftSide := Side([][]Face{{L, L, L}, {L, L, L}, {L, L, L}})
+	leftSide := side([][]face{{L, L, L}, {L, L, L}, {L, L, L}})
 	if !reflect.DeepEqual(cube.Sides[L], leftSide) {
 		t.Fatalf("Left side is not properly assigned, expected: %v, got: %v", leftSide, cube.Sides[L])
 	}
@@ -51,18 +54,18 @@ func TestNewCube(t *testing.T) {
 
 func TestValid(t *testing.T) {
 	for _, move := range movesForValidation {
-		if move.ValidFor(move.Cube) != move.valid {
+		if move.validFor(move.Cube) != move.valid {
 			t.Fatalf("Wrong validation result for %v,\n expexted: %t, got: %t.",
-				move, move.valid, move.ValidFor(move.Cube))
+				move, move.valid, move.validFor(move.Cube))
 		}
 	}
 }
 
 func TestRotation(t *testing.T) {
 	for _, move := range movesForValidation {
-		if move.RotationFor(move.Cube) != move.rotation {
+		if move.rotationFor(move.Cube) != move.rotation {
 			t.Fatalf("Wrong validation result for %v,\n expexted: %t, got: %t.",
-				move, move.rotation, move.RotationFor(move.Cube))
+				move, move.rotation, move.rotationFor(move.Cube))
 		}
 	}
 }

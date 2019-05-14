@@ -12,8 +12,8 @@ var movesForValidation = []struct {
 	{
 		Move: Move{
 			N:    1,
-			Face: R,
-			Dir:  Cw,
+			face: R,
+			dir:  Cw,
 		},
 		Cube:     *cube3,
 		valid:    true,
@@ -22,8 +22,8 @@ var movesForValidation = []struct {
 	{
 		Move: Move{
 			N:    1,
-			Face: F,
-			Dir:  Acw,
+			face: F,
+			dir:  Acw,
 		},
 		Cube:     *cube3,
 		valid:    true,
@@ -32,8 +32,8 @@ var movesForValidation = []struct {
 	{
 		Move: Move{
 			N:    2,
-			Face: B,
-			Dir:  Two,
+			face: B,
+			dir:  Two,
 		},
 		Cube:     *cube3,
 		valid:    true,
@@ -42,8 +42,8 @@ var movesForValidation = []struct {
 	{
 		Move: Move{
 			N:    4,
-			Face: R,
-			Dir:  Cw,
+			face: R,
+			dir:  Cw,
 		},
 		Cube:     *cube3,
 		valid:    false,
@@ -52,8 +52,8 @@ var movesForValidation = []struct {
 	{
 		Move: Move{
 			N:    4,
-			Face: R,
-			Dir:  Cw,
+			face: R,
+			dir:  Cw,
 		},
 		Cube:     *cube7,
 		valid:    true,
@@ -62,8 +62,8 @@ var movesForValidation = []struct {
 	{
 		Move: Move{
 			N:    7,
-			Face: R,
-			Dir:  Cw,
+			face: R,
+			dir:  Cw,
 		},
 		Cube:     *cube7,
 		valid:    true,
@@ -72,8 +72,8 @@ var movesForValidation = []struct {
 	{
 		Move: Move{
 			N:    7,
-			Face: R,
-			Dir:  Cw,
+			face: R,
+			dir:  Cw,
 		},
 		Cube:     *cube3,
 		valid:    false,
@@ -82,8 +82,8 @@ var movesForValidation = []struct {
 	{
 		Move: Move{
 			N:    3,
-			Face: L,
-			Dir:  Cw,
+			face: L,
+			dir:  Cw,
 		},
 		Cube:     *cube3,
 		valid:    true,

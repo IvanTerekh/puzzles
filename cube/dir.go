@@ -9,11 +9,11 @@ const (
 	Two
 )
 
-// Dir represents move direction. Can by clockwise, anticlockwise and double turn.
-type Dir byte
+// dir represents move direction. Can by clockwise, anticlockwise and double turn.
+type dir byte
 
 // String is Stringer interface implementation.
-func (d Dir) String() string {
+func (d dir) String() string {
 	switch d {
 	case Cw:
 		return "Clockwise"
@@ -23,5 +23,16 @@ func (d Dir) String() string {
 		return "Double turn"
 	default:
 		return "Invalid direction"
+	}
+}
+
+func (d dir) opposite() dir {
+	switch d {
+	case Cw:
+		return Acw
+	case Acw:
+		return Cw
+	default:
+		return d
 	}
 }

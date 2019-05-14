@@ -6,18 +6,26 @@ import (
 	"strings"
 )
 
-// Side represents a square of stickers on each side of the cube.
-type Side [][]Face
-
 // Cube contains six sides and size n.
+// Side matrices are located the following way:
+//              0,0 0,1 0,2
+//              1,0 1,1 1,2
+//              2,0 2,1 2,2
+// 0,0 0,1 0,2  0,0 0,1 0,2  0,0 0,1 0,2  0,0 0,1 0,2
+// 1,0 1,1 1,2  1,0 1,1 1,2  1,0 1,1 1,2  1,0 1,1 1,2
+// 2,0 2,1 2,2  2,0 2,1 2,2  2,0 2,1 2,2  2,0 2,1 2,2
+//              0,0 0,1 0,2
+//              1,0 1,1 1,2
+//              2,0 2,1 2,2
+// Each numbers pair is slice element index pair.
 type Cube struct {
-	N     int
-	Sides [6]Side
+	n     int
+	Sides [6]side
 }
 
 // String implements Stringer interface.
 func (c Cube) String() string {
-	n := c.N
+	n := c.n
 	tab := strings.Repeat("  ", n) + " "
 	str := strings.Builder{}
 	str.WriteRune('\n')
@@ -45,7 +53,7 @@ func (c Cube) String() string {
 	return str.String()
 }
 
-func writeSideLine(str *strings.Builder, s *Side, i int) {
+func writeSideLine(str *strings.Builder, s *side, i int) {
 	n := len(*s)
 	for j := 0; j < n; j++ {
 		str.WriteString((*s)[i][j].String() + " ")
@@ -53,20 +61,70 @@ func writeSideLine(str *strings.Builder, s *Side, i int) {
 }
 
 // NewCube generates a new cube in the solved state.
-func NewCube(n int) (*Cube, error) {
+func NewCube(n int) (Cube, error) {
 	if n < 1 {
-		return nil, errors.New("invalid cube size should be > 0")
+		return Cube{}, errors.New("invalid cube size should be > 0")
 	}
 
-	c := &Cube{N: n}
+	c := Cube{n: n}
 	for i := range c.Sides {
-		c.Sides[i] = make([][]Face, n, n)
+		c.Sides[i] = make([][]face, n, n)
 		for j := range c.Sides[i] {
-			c.Sides[i][j] = make([]Face, n, n)
+			c.Sides[i][j] = make([]face, n, n)
 			for k := range c.Sides[i][j] {
-				c.Sides[i][j][k] = Face(i)
+				c.Sides[i][j][k] = face(i)
 			}
 		}
 	}
 	return c, nil
+}
+
+// Exec performs a move or rotation on a cube.
+func (c Cube) exec(m Move) {
+	f := m.face
+	s := c.Sides
+
+	s[f].turn(m.dir)
+	if m.rotationFor(c) {
+		s[f.opposite()].turn(m.dir.opposite())
+	}
+
+	switch f {
+	case U:
+		for i := 0; i < m.N; i++ {
+			for j := 0; j < c.n; j++ {
+				cycle(m.dir, &s[F][i][j], &s[L][i][j], &s[B][i][j], &s[R][i][j])
+			}
+		}
+	case D:
+		for i := 0; i < m.N; i++ {
+			for j := 0; j < c.n; j++ {
+				cycle(m.dir, &s[F][c.n-1-i][j], &s[U][c.n-1-i][j], &s[B][c.n-1-i][j], &s[D][c.n-1-i][j])
+			}
+		}
+	case R:
+		for i := 0; i < m.N; i++ {
+			for j := 0; j < c.n; j++ {
+				cycle(m.dir, &s[F][j][c.n-1-i], &s[U][j][c.n-1-i], &s[B][j][i], &s[D][j][c.n-1-i])
+			}
+		}
+	case L:
+		for i := 0; i < m.N; i++ {
+			for j := 0; j < c.n; j++ {
+				cycle(m.dir, &s[F][j][i], &s[U][j][i], &s[B][c.n-1-j][c.n-1-i], &s[D][j][i])
+			}
+		}
+	case F:
+		for i := 0; i < m.N; i++ {
+			for j := 0; j < c.n; j++ {
+				cycle(m.dir, &s[U][c.n-1-i][j], &s[R][j][i], &s[D][i][c.n-1-j], &s[L][c.n-1-j][c.n-1-i])
+			}
+		}
+	case B:
+		for i := 0; i < m.N; i++ {
+			for j := 0; j < c.n; j++ {
+				cycle(m.dir, &s[U][i][j], &s[R][j][c.n-1-i], &s[D][c.n-1-i][c.n-1-j], &s[L][c.n-1-j][i])
+			}
+		}
+	}
 }

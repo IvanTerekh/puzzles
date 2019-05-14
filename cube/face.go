@@ -2,7 +2,7 @@ package cube
 
 const (
 	// F is Front.
-	F = iota
+	F face = iota
 	// R is right.
 	R
 	// B is back.
@@ -15,12 +15,12 @@ const (
 	D
 )
 
-// Face represents a color on a cube. As cube's color can vary instead of using particular colors
+// face represents a color on a cube. As cube's color can vary instead of using particular colors
 // sides colors used, e.g. front side color, right side color etc. Possible values are F, R, B, L, U, D.
-type Face byte
+type face byte
 
 // String is an implementation of Stringer interface.
-func (f Face) String() string {
+func (f face) String() string {
 	switch f {
 	case F:
 		return "F"
@@ -37,4 +37,9 @@ func (f Face) String() string {
 	default:
 		return "Invalid Move"
 	}
+}
+
+func (f face) opposite() face {
+	opposites := [6]face{D, R, B, L, F, U}
+	return opposites[f]
 }
